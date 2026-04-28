@@ -345,7 +345,7 @@
       <p class="section-sub">Ready to grow your brand? Drop us a message and we'll get back to you within 24 hours.</p>
 
       <div class="contact-grid">
-        <div class="contact-form">
+        <form class="contact-form" onsubmit="event.preventDefault()">
           <div class="form-row">
             <div class="form-group">
               <label>Your Name</label>
@@ -353,7 +353,7 @@
             </div>
             <div class="form-group">
               <label>Your Contact</label>
-              <input type="phone" placeholder="+91 XXXXX XXXXX" class="form-input" />
+              <input type="tel" placeholder="+91 XXXXX XXXXX" class="form-input" />
             </div>
             <div class="form-group">
               <label>Email Address</label>
@@ -381,15 +381,15 @@
             <label>Your Message</label>
             <textarea placeholder="Tell us about your project..." class="form-input form-textarea"></textarea>
           </div>
-          <button class="btn-primary btn-full" onclick="handleSubmit(this)">Send Message →</button>
-        </div>
+          <button class="btn-primary btn-full" type="button" onclick="handleSubmit(this)">Send Message →</button>
+        </form>
 
         <div class="contact-info">
           <div class="contact-item">
             <div class="contact-icon">📧</div>
             <div>
               <div class="contact-label">Email Us</div>
-              <div class="contact-val">hello@gmail.com</div>
+              <div class="contact-val">nexvoradigitalsofficial@gmail.com</div>
             </div>
           </div>
           <div class="contact-item">
@@ -477,6 +477,67 @@
     </div>
   </footer>
 <script src="index.js"></script>
+<script>
+function handleSubmit(btn) {
+
+  // Get the full form container safely
+  const form = btn.closest('form') || btn.parentElement;
+
+  // Get inputs directly (safe order-based since your layout is fixed)
+  const inputs = form.querySelectorAll('.form-input');
+
+  const data = {
+    name: inputs[0]?.value || "",
+    phone: inputs[1]?.value || "",
+    email: inputs[2]?.value || "",
+    city: inputs[3]?.value || "",
+    service: form.querySelector('select')?.value || "",
+    message: form.querySelector('textarea')?.value || ""
+  };
+
+  // Disable button while sending
+  btn.disabled = true;
+  btn.textContent = "Sending...";
+
+  fetch("https://formspree.io/f/xyklqbkj", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(res => {
+    if (res.ok) {
+
+      // Success UI
+      btn.textContent = "✓ Message Sent!";
+      btn.style.background = "linear-gradient(135deg, #43e97b, #38f9d7)";
+      btn.style.color = "#0d0a2e";
+
+      // Reset form safely
+      if (form.tagName === "FORM") form.reset();
+
+      // Restore button after 3 sec
+      setTimeout(() => {
+        btn.textContent = "Send Message →";
+        btn.style.background = "";
+        btn.style.color = "";
+        btn.disabled = false;
+      }, 3000);
+
+    } else {
+      throw new Error("Form submission failed");
+    }
+  })
+  .catch(() => {
+    alert("❌ Error sending message");
+
+    btn.textContent = "Send Message →";
+    btn.disabled = false;
+  });
+}
+</script>
 </body>
 
 </html>

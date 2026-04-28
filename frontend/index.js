@@ -25,13 +25,4 @@
     document.querySelectorAll('.glass-card, .service-card').forEach(el => observer.observe(el));
 
     // Form submit
-    function handleSubmit(btn) {
-      btn.textContent = '✓ Message Sent!';
-      btn.style.background = 'linear-gradient(135deg, #43e97b, #38f9d7)';
-      btn.style.color = '#0d0a2e';
-      setTimeout(() => {
-        btn.textContent = 'Send Message →';
-        btn.style.background = '';
-        btn.style.color = '';
-      }, 3000);
-    }
+   
